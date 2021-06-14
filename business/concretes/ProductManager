@@ -1,0 +1,112 @@
+package kaanicyar.northwind.business.concretes;
+
+import kaanicyar.northwind.business.abstracts.ProductService;
+import kaanicyar.northwind.core.result.DataResult;
+import kaanicyar.northwind.core.result.Result;
+import kaanicyar.northwind.core.result.SuccessDataResult;
+import kaanicyar.northwind.core.result.SuccessResult;
+import kaanicyar.northwind.dataAccess.abstracts.ProductDao;
+import kaanicyar.northwind.entities.concretes.Product;
+import kaanicyar.northwind.entities.dtos.ProductWithCategoryDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+// Spring arka planda alttaki metodun parametresi olabilecek bir class'ı arıyor ve
+// girdi olarak vermesini sağlıyor
+
+
+//CLASSLARA AUTOWIRED YAZIYORUZ VE BİR ÜSTÜNDEKİ LAYERDAN YANİ(BUSİNESS DATA ACCESTEKİ INTERFACE'İ VE
+// APİ BUSİNESSTAKİ INTERFACE'İ) AUTOWİRED EDİYOR.
+
+//eğer sadece this.productDao.findAll() bunu yollasaydık yukarıdaki dönüş tiği DataResult<List<Product>>
+//DEĞİL List<Product> olurdu. Yanında message da yolladığımız için sadece onu seçemeyiz.
+
+@Service
+public class ProductManager implements ProductService {
+
+
+    private ProductDao productDao;
+
+    @Autowired
+    public ProductManager(ProductDao productDao) {
+        super();
+        this.productDao = productDao;
+    }
+
+    @Override
+    public DataResult<List<Product>> getAll() {
+
+        return new SuccessDataResult<List<Product>>
+                ("Data listelendi",this.productDao.findAll());
+
+    }
+
+    @Override
+    public Result add(Product product) {
+        this.productDao.save(product);
+        return new SuccessResult("Ürün eklendi");
+    }
+
+    @Override
+    public DataResult<Product> getByProductName(String productName) {
+        return new SuccessDataResult<Product>
+                ("Data listelendi",this.productDao.getByProductName(productName));
+    }
+
+    @Override
+    public DataResult<Product> getByProductNameAndCategoryId(String productName, int categoryId) {
+        //business codes
+
+        return new SuccessDataResult<Product>
+                ("Data listelendi",this.productDao.getByProductNameAndCategory_CategoryId(productName,categoryId));
+    }
+
+    @Override
+    public DataResult<List<Product>> getByProductNameOrCategoryId(String productName, int categoryId) {
+        return new SuccessDataResult<List<Product>>
+                ("Data listelendi",this.productDao.getByProductNameOrCategory_CategoryId(productName, categoryId));
+    }
+
+    @Override
+    public DataResult<List<Product>> getByCategoryIdIn(List<Integer> categories) {
+        return new SuccessDataResult<List<Product>>
+                ("Data listelendi",this.productDao.getByCategoryIn(categories));
+    }
+
+    @Override
+    public DataResult<List<Product>> getByProductNameContains(String productName) {
+        return new SuccessDataResult<List<Product>>
+                ("Data listelendi",this.productDao.getByProductNameContains(productName));
+    }
+
+//    @Override
+//    public DataResult<List<Product>> getByProductNameStartsWith(String productName) {
+//        return new SuccessDataResult<List<Product>>
+//                (this.productDao.getByProductNameStartsWith(productName),"Data listelendi");
+//    }
+
+    @Override
+    public DataResult<List<Product>> getByNameAndCategory(String productName, int categoryId) {
+        return new SuccessDataResult<List<Product>>
+                ("Data listelendi",this.productDao.getByNameAndCategory(productName,categoryId));
+    }
+
+    @Override
+    public DataResult<List<Product>> getAll(int pageNo, int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+
+        return new SuccessDataResult<List<Product>>
+                (this.productDao.findAll(pageable).getContent());
+    }
+
+    @Override
+    public DataResult<List<ProductWithCategoryDto>> getProductWithCategoryDetails() {
+        return new SuccessDataResult<List<ProductWithCategoryDto>>
+                ("Data listelendi",this.productDao.getProductWithCategoryDetails());
+    }
+
+}
