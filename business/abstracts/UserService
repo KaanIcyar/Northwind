@@ -1,0 +1,14 @@
+package kaanicyar.northwind.business.abstracts;
+
+import kaanicyar.northwind.core.entities.User;
+import kaanicyar.northwind.core.result.DataResult;
+import kaanicyar.northwind.core.result.Result;
+import kaanicyar.northwind.entities.concretes.Product;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
+
+
+public interface UserService {
+    Result add(User user);
+    DataResult<User> findByEmail(String email);
+}
