@@ -1,0 +1,25 @@
+package kaanicyar.northwind.core.result;
+
+import kaanicyar.northwind.core.result.DataResult;
+import kaanicyar.northwind.entities.concretes.Product;
+
+import java.util.List;
+
+public class ErrorDataResult<T> extends DataResult {
+
+    public ErrorDataResult(String message, T data) {
+        super(false, message, data);
+    }
+
+    public ErrorDataResult(List<Product> data) {
+        super(data, false);
+    }
+
+    public ErrorDataResult(String message) {
+        super(false, message, null);
+    }
+
+    public ErrorDataResult() {
+        super(null, false);
+    }
+}
