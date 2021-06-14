@@ -1,0 +1,32 @@
+package kaanicyar.northwind.business.concretes;
+
+import kaanicyar.northwind.business.abstracts.UserService;
+import kaanicyar.northwind.core.dataAccess.UserDao;
+import kaanicyar.northwind.core.entities.User;
+import kaanicyar.northwind.core.result.DataResult;
+import kaanicyar.northwind.core.result.Result;
+import kaanicyar.northwind.core.result.SuccessDataResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserManager implements UserService {
+    private UserDao userDao;
+
+    @Autowired
+    public UserManager(UserDao userDao) {
+        super();
+        this.userDao = userDao;
+    }
+
+    @Override
+    public Result add(User user) {
+        this.userDao.save(user);
+        return new SuccessDataResult("Kullanıcı Eklendi...");
+    }
+
+    @Override
+    public DataResult<User> findByEmail(String email) {
+        return new SuccessDataResult<User>("Kullanıcı bulundu...", this.userDao.findByEmail(email));
+    }
+}
